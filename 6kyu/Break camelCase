@@ -1,0 +1,27 @@
+/*
+Description:
+
+Complete the solution so that the function will break up camel casing, using a space between words.
+Example
+
+"camelCasing"  =>  "camel Casing"
+"identifier"   =>  "identifier"
+""             =>  ""
+*/
+import java.lang.StringBuilder;
+class Solution {
+  public static String camelCase(String input) {
+    StringBuilder res = new StringBuilder(input);
+    
+    //i = 0 is skipped since the solution is not to have leading spaces, and for error prevention if char at 0 is a capital
+    for (int i = 1; i < res.length(); i++){
+      //if character at i is a capital and the previous index is not ' ' (which means the camel case is already broken)
+      //add a space to the previous index
+      if (Character.isUpperCase(res.charAt(i)) && res.charAt(i-1) != ' '){
+        res.insert(i, " ");
+      } 
+    }
+    
+    return res.toString();
+  }
+}
