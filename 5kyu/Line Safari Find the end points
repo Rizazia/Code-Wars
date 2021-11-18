@@ -1,0 +1,146 @@
+/*
+Find the line end-points.
+
+Input
+
+    A string representing a small drawing made only of straight lines which are vertical, horizontal, or diagonals (of a square)
+    The drawing character is *
+
+Output
+
+    Find all end-points of these straight lines
+    Return the same string as the input, but with all end-points marked with an X
+
+Notes
+
+    The input row separator is \n
+    The input is not jagged (all rows have the same length)
+    End-points of a line are always as distant as possible from each other. e.g. pay special attention to the middle horizonal line of the 'E' example
+    All lines have a length of 3 or more
+    There are no test cases with ambiguous answers
+
+Examples
+Input	Expected Output
+
+          
+ *********
+ *       *
+ *       *
+ *********
+ 
+
+	
+
+ 
+ X*******X
+ *       *
+ *       *
+ X*******X
+ 
+
+     
+    *
+   * *
+  *   *
+ *     *
+  *   *
+   * *
+    *
+ 
+
+	
+
+ 
+    X
+   * *
+  *   *
+ X     X
+  *   *
+   * *
+    X
+ 
+
+     
+ *******
+ *
+ ****
+ *
+ *******
+ 
+
+	
+
+ 
+ X*****X
+ *
+ X**X
+ *
+ X*****X
+ 
+
+     
+    *
+    *
+    *
+ *******
+    *
+    *
+    *
+ 
+
+	
+
+ 
+    X
+    *
+    *
+ X*****X
+    *
+    *
+    X
+ 
+
+*/
+import java.util.*;
+import java.util.stream.*;
+
+public class Dinglemouse {
+  public static String findEndPoints(final String s) {
+    final String[] rows = s.split("\n");
+    final String[][] table = new String[rows.length][];
+    for (int i = 0; i < rows.length; i++) {
+      table[i] = rows[i].split("");
+    }
+    for (int i = 0; i < table.length; i++) {
+      for (int j = 0; j < table[i].length; j++) {
+        if (isLineEndpoint(table, i, j)) {
+          table[i][j] = "X";
+        }
+      }
+    }
+    final String result = Arrays
+      .stream(table)
+      .map(row -> Arrays.stream(row).collect(Collectors.joining(""))) 
+      .collect(Collectors.joining("\n")) + "\n"; 
+    return result;
+  }
+  private static boolean isLineEndpoint(final String[][] table, int y, int x) {
+    if (!ipol(table, y, x)) return false;
+    boolean a = ipol(table, y - 1, x);
+    boolean b = ipol(table, y + 1, x);
+    if ((a ^ b) && ((a && ipol(table, y - 2, x)) || (b && ipol(table, y + 2, x)))) return true;
+    a = ipol(table, y, x - 1);
+    b = ipol(table, y, x + 1);
+    if ((a ^ b) && ((a && ipol(table, y, x - 2)) || (b && ipol(table, y, x + 2)))) return true;
+    a = ipol(table, y - 1, x - 1);
+    b = ipol(table, y + 1, x + 1);
+    if ((a ^ b) && ((a && ipol(table, y - 2, x - 2)) || (b && ipol(table, y + 2, x + 2)))) return true;
+    a = ipol(table, y - 1, x + 1);
+    b = ipol(table, y + 1, x - 1);
+    if ((a ^ b) && ((a && ipol(table, y - 2, x + 2)) || (b && ipol(table, y + 2, x - 2)))) return true;
+    return false;
+  }
+  private static boolean ipol(final String[][] table, int y, int x) {
+    return (y >= 0 && x >= 0 && y < table.length && x < table[y].length && !table[y][x].equals(" "));
+  }
+}
