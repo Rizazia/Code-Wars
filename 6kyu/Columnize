@@ -1,0 +1,47 @@
+/*
+You are given an array of strings that need to be spread among N columns. Each column's width should be the same as the length of the longest string inside it.
+
+Separate columns with " | ", and lines with "\n"; content should be left-justified.
+
+{"1", "12", "123", "1234", "12345", "123456"} should become:
+
+1     
+12    
+123   
+1234  
+12345 
+123456
+
+for 1 column,
+
+1     | 12    
+123   | 1234  
+12345 | 123456
+
+for 2 columns,
+
+1     | 12     | 123 | 1234
+12345 | 123456
+
+for 4 columns.
+*/
+public class Kata {
+  
+  public static String columnize(String[] input, int numberOfColumns) {
+    StringBuilder result = new StringBuilder();
+    int[] maxLengths = new int[numberOfColumns];
+    for (int i = 0; i < input.length; i++) {
+      if (input[i].length() > maxLengths[i % numberOfColumns])
+        maxLengths[i % numberOfColumns] = input[i].length();
+    }
+    for (int i = 0; i < input.length; i++) {
+      String s = input[i];
+      result.append(s);
+      for (int j = 0; j < (maxLengths[i % numberOfColumns] - s.length()); j++)
+        result.append(" ");
+      if ((i + 1) % numberOfColumns == 0 && i != input.length - 1) result.append("\n");
+      else if (i != input.length - 1) result.append(" | ");
+    }
+    return result.toString();
+  }
+}
